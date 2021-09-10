@@ -13,7 +13,6 @@ public:
 	void initialize(){
 		top = bottom;
 		stop = getSize()-1;
-		//array[0] = NULL;
 	}
 	bool isEmpty(){
 		if ( top != bottom ){ return false; }
@@ -24,9 +23,9 @@ public:
 		else { return false; }
 	}
 	bool push(int n){
-		if (!isFull()){
+		if ( !isFull() ){
 			++top;
-			array[top] = n;
+			*(array + top) = n;
 			//toString = deploy();
 			return true;
 		}else {
@@ -34,8 +33,8 @@ public:
 		}
 	}
 	bool pop(){
-		if (!isEmpty()){
-			array[top] = NULL;
+		if ( !isEmpty() ){
+			*(array + top) = NULL;
 			--top;
 			//toString = deploy();
 			return true;
@@ -45,7 +44,7 @@ public:
 	}
 	int getTop(){
 		if (!isEmpty()){
-			return array[top];
+			return *(array + top);
 		}else{
 			return -1;
 		}
@@ -69,59 +68,89 @@ public:
 		if (i == getSize()){
 			return n;
 		}else{
-			if (array[i] != NULL){
+			if (*(array + i) != NULL){
 				++n;
 			}
 			getElementNumber(++i, n);
 		}
 	}
+	
+	int countEven(int i, int n){
+		if (i == getElementNumber(0,0)){
+			return n;
+		}else{
+			if (*(array + i)%2==0){
+				++n;
+			}
+			countEven(++i,n);
+		}
+	}
+	
+	int countOdd(int i, int n){
+		if (i == getElementNumber(0,0)){
+			return n;
+		}else{
+			if (*(array + i)%2!=0){
+				++n;
+			}
+			countOdd(++i,n);
+		}
+	}
+	
+	int addAll(int i, int n){
+		if (i == getSize()){
+			return n;
+		}else{
+			if (*(array + i) != NULL){
+				n += *(array + i);
+			}
+			addAll(++i,n);
+		}
+	}
+	
+	int* getArray(){
+		return array;
+	}
 	string deploy(int i, int e){
 		if ( !isEmpty() ){
-			cout<<"i: "<<i<<", e: "<<e<<endl;
-			if (i == e){
-				cout<<toString<<endl; //DOES NOT WORK
-				return toString;
-			}else{
-				//cout<<"array: "<<array[i]<<endl;
-				toString += to_string(array[i]) + ", ";
-				deploy(++i, e);
-			}
+			toString = "";
+			makeToString(i, e);
+			return toString;
+		}else {
+			toString = "La pila está vacía";
+			return toString;
+		}
+	}
+	void makeToString(int i, int e){
+		if (i == e){
+			return;
+		}else{
+			toString += to_string( *(array + i) ) + ", ";
+			makeToString(++i, e);
+		}
+	}
+};
+
+/*
+	string deploy(int i, int e){
+		if ( !isEmpty() ){
+			makeToString(i, e);
+			cout<<" /nStacks deploy is returning here"<<endl;
+			return toString;
 		}else {
 			toString = "empty";
 			return toString;
 		}
 	}
-	void makeToString(int i){
-		if ( i == getSize()){
+	void makeToString(int i, int e){
+		if (i == e){
+			cout<<toString<<endl; //DOES NOT WORK
 			return;
 		}else{
-			if (array[i] != NULL)
-				toString += to_string(array[i]) + ", ";
-			makeToString(++i);
+			cout<<"array: "<<array[i]<<endl;
+			toString += to_string(array[i]) + ", ";
+			makeToString(++i, e);
 		}
-	}
-
-};
-
-/*
-	string deploy(){
-		if ( !isEmpty() ){
-			toString = " Stack = {";
-			makeToString(0);
-			toString += "}";
-			return toString;
-		}else {
-			toString = " Stack is empty";
-			return toString;
-		}
-	}
-	void makeToString(int i){
-		if ( i == getSize()){
-			return;
-		}else{
-			if (array[i] != NULL)
-				toString += to_string(array[i]) + ", ";
-			makeToString(++i);
-		}
-	}
+	}	
+	
 */

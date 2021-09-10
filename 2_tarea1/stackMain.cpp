@@ -1,5 +1,14 @@
+/*
+TODO:
+	> fix clear() - returns false everytime
+	> Añadir validaciones para todo we (isempty etc)
+	> sortUp
+	> quitar el contador de elementos -> es innecesario
+*/
+
 #include <iostream>
 #include "Stack.h"
+#include "Sorter.h"
 using namespace std;
 
 void showMenu();
@@ -10,8 +19,14 @@ void push();
 void pop();
 void getTop();
 void deploy();
+void clear();
+void countEven();
+void countOdd();
+void addAll();
+void sortUp();
 
 Stack stack;
+Sorter sorter;
 
 int main(){
 	showMenu();
@@ -72,6 +87,35 @@ void inicializar(){
 	cout<<"\nLa pila ha sido inicializada correctamente\n"<<endl;
 	return;
 }
+void deploy(){
+	int nums = stack.getElementNumber(0,0);
+	cout<<" Elementos: "<<stack.deploy(0, nums)<<endl;
+}
+void clear(){
+	if (stack.clear()){
+		cout<<"La pila ha sido vaciada"<<endl;
+	}
+	else {
+		cout<<"La pila ya estaba vacia"<<endl;
+	}
+}
+void countEven(){
+	cout<<" Pares en pila: "<<stack.countEven(0,0)<<endl;
+}
+void countOdd(){
+	cout<<" Impares en pila: "<<stack.countOdd(0,0)<<endl;
+}
+
+void addAll(){
+	cout<<" Sumatoria de datos en pila: "<<stack.addAll(0,0)<<endl;
+}
+
+void sortUp(){
+	cout<<" Pila en orden ascendente: ";
+	sorter.bubbleSort(stack.getArray(), stack.getSize());
+	deploy();
+	return;
+}
 
 void readChoice(int &choice){
 	switch (choice) {
@@ -88,22 +132,31 @@ void readChoice(int &choice){
 			getTop();
 			break;
 		case 5:
-			if (stack.clear()){
-				cout<<"STACK CLEARED"<<endl;
-			}
-			else {
-				cout<<"EMPTY"<<endl;
-			}
+			deploy();
 			break;
 		case 6:
-			int nums;
-			nums = stack.getElementNumber(0,0);
-			cout<<" Elementos: "<<stack.deploy(0, nums)<<endl;
-			cout<<" Tamaño: "<<stack.getSize()<<endl;
-			cout<<" Numero de elementos: "<<nums<<"\n"<<endl;
+			countEven();
+			break;
+		case 7:
+			countOdd();
+			break;
+		case 8:
+			addAll();
+			break;
+		case 9:
+			sortUp();
+			break;
+		case 10:
+			clear();
+			break;
+		case 11:
 			break;
 		default:
 			cout<<"DEFAULT"<<endl;
 	}
 	system("pause");
 }
+
+/*
+
+*/
