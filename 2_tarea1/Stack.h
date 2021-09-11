@@ -8,7 +8,14 @@ private:
 	int stop;
 	int array[5];
 	string toString;
-	
+	/*
+	string messages[] = {
+		"ERROR: La pila está vacía",
+		"ERROR: La pila ya estaba vacía",
+		"ERROR: La pila no tiene datos que eliminar (UNDERFLOW)",
+		"ERROR: La pila está llena (OVERFLOW)",
+		
+	}*/
 public:
 	void initialize(){
 		top = bottom;
@@ -76,13 +83,17 @@ public:
 	}
 	
 	int countEven(int i, int n){
-		if (i == getElementNumber(0,0)){
-			return n;
-		}else{
-			if (*(array + i)%2==0){
-				++n;
-			}
-			countEven(++i,n);
+		if (!isEmpty()){
+			if (i == getElementNumber(0,0)){
+				return n;
+			}else{
+				if (*(array + i)%2==0){
+					++n;
+				}
+				countEven(++i,n);
+			}	
+		}else {
+			return -1;
 		}
 	}
 	
@@ -98,14 +109,19 @@ public:
 	}
 	
 	int addAll(int i, int n){
-		if (i == getSize()){
-			return n;
+		if (!isEmpty()){
+			if (i == getSize()){
+				return n;
+			}else{
+				if (*(array + i) != NULL){
+					n += *(array + i);
+				}
+				addAll(++i,n);
+			}			
 		}else{
-			if (*(array + i) != NULL){
-				n += *(array + i);
-			}
-			addAll(++i,n);
+			return -1;
 		}
+
 	}
 	
 	int* getArray(){

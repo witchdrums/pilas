@@ -49,18 +49,46 @@ void showMenu(){
 		"[9]  Ordenar pila (ascendente)\n"<<
 		"[10] Vaciar pila\n"<<
 		"[11] Salir\n"<<
-		"\n Eliga una opcion> ";
+		"\n Decisi"<<char(162)<<"n > ";
 		cin>>choice;
 		readChoice(choice);
 		
 	} while (choice != 11);
 }
+void readChoice(int &choice){
+	cout<<"--------------------------------"<<endl;
+	switch (choice) {
+		case 1: inicializar();
+			break;
+		case 2: push();
+			break;
+		case 3: pop();
+			break;
+		case 4: getTop();
+			break;
+		case 5: deploy();
+			break;
+		case 6: countEven();
+			break;
+		case 7: countOdd();
+			break;
+		case 8: addAll();
+			break;
+		case 9: sortUp();
+			break;
+		case 10: clear();
+			break;
+		case 11: break;
+		default: cout<<"DEFAULT"<<endl;
+	}
+	system("pause");
+}
 void push(){
 	int p;
-	cout<<"\nDato a ingresar > ";
+	cout<<"\nDato > ";
 	cin>>p;
 	if (stack.push(p)){
-		cout<<"\n El dato "<<stack.getTop()<<" ha sido ingresado a la pila\n"<<endl;
+		cout<<"\nEl dato "<<stack.getTop()<<" ha sido ingresado a la pila\n"<<endl;
 	}
 	else cout<<"ERROR: La pila ya esta llena (OVERFLOW)\n"<<endl;
 	return;
@@ -69,9 +97,9 @@ void pop(){
 	int popped = stack.getTop();
 	if (popped != -1){
 		if (stack.pop()) {
-			cout<<"\n El dato "<<popped<<" ha salido de la pila\n"<<endl;
+			cout<<"\nEl dato "<<popped<<" ha salido de la pila\n"<<endl;
 		}	
-	}else cout<<"\n ERROR: La pila ya esta vacia (UNDERFLOW)\n"<<endl;
+	}else cout<<"\nERROR: La pila ya esta vacia (UNDERFLOW)\n"<<endl;
 }
 void getTop(){	
 	int top = stack.getTop();
@@ -79,7 +107,7 @@ void getTop(){
 		cout<<" \nLa cima de la pila es: "<<top<<"\n"<<endl;
 	}
 	else {
-		cout<<"\n ERROR: La pila esta vacia\n"<<endl;	
+		cout<<"\nERROR: La pila esta vacia\n"<<endl;	
 	}
 }
 void inicializar(){
@@ -88,6 +116,7 @@ void inicializar(){
 	return;
 }
 void deploy(){
+	
 	int nums = stack.getElementNumber(0,0);
 	cout<<" Elementos: "<<stack.deploy(0, nums)<<endl;
 }
@@ -96,66 +125,37 @@ void clear(){
 		cout<<"La pila ha sido vaciada"<<endl;
 	}
 	else {
-		cout<<"La pila ya estaba vacia"<<endl;
+		cout<<"ERROR: La pila ya estaba vacia"<<endl;
 	}
 }
 void countEven(){
-	cout<<" Pares en pila: "<<stack.countEven(0,0)<<endl;
+	int count = stack.countEven(0,0);
+	if (count != -1){
+		cout<<"Pares en pila: "<<count<<endl;
+	}else{
+		cout<<"ERROR: La pila está vacía"<<endl;
+	}
 }
 void countOdd(){
-	cout<<" Impares en pila: "<<stack.countOdd(0,0)<<endl;
+	cout<<"Impares en pila: "<<stack.countOdd(0,0)<<endl;
 }
 
 void addAll(){
-	cout<<" Sumatoria de datos en pila: "<<stack.addAll(0,0)<<endl;
+	int sum = stack.addAll(0,0);
+	if (sum>-1){
+		cout<<"Sumatoria de datos en pila: "<<stack.addAll(0,0)<<endl;	
+	}else{
+		cout<<"ERROR: La pila esta vacia"<<endl;
+	}
 }
 
 void sortUp(){
-	cout<<" Pila en orden ascendente: ";
-	sorter.bubbleSort(stack.getArray(), stack.getSize());
+	cout<<"Pila en orden ascendente: ";
+	sorter.bubbleSort(stack.getArray(), stack.getElementNumber(0,0)-1);
 	deploy();
 	return;
 }
 
-void readChoice(int &choice){
-	switch (choice) {
-		case 1: 
-			inicializar();
-			break;
-		case 2:
-			push();
-			break;
-		case 3:
-			pop();
-			break;
-		case 4:
-			getTop();
-			break;
-		case 5:
-			deploy();
-			break;
-		case 6:
-			countEven();
-			break;
-		case 7:
-			countOdd();
-			break;
-		case 8:
-			addAll();
-			break;
-		case 9:
-			sortUp();
-			break;
-		case 10:
-			clear();
-			break;
-		case 11:
-			break;
-		default:
-			cout<<"DEFAULT"<<endl;
-	}
-	system("pause");
-}
 
 /*
 
