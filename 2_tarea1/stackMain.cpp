@@ -60,23 +60,45 @@ void readChoice(int &choice){
 	switch (choice) {
 		case 1: inicializar();
 			break;
-		case 2: push();
+		case 2: 
+			if (stack.init) push();
+			else cout<<"ERROR: La pila no se ha inicializado"<<endl;
 			break;
-		case 3: pop();
+		case 3:
+			if (stack.init) pop();
+			else cout<<"ERROR: La pila no se ha inicializado"<<endl;
 			break;
-		case 4: getTop();
+		case 4:
+			if (stack.init) getTop();
+			else cout<<"ERROR: La pila no se ha inicializado"<<endl;
 			break;
-		case 5: deploy();
+		case 5:
+			if (stack.init) deploy();
+			else cout<<"ERROR: La pila no se ha inicializado"<<endl;
 			break;
-		case 6: countEven();
+		case 6:
+			
+			if (stack.init) countEven();
+			else cout<<"ERROR: La pila no se ha inicializado"<<endl;
 			break;
-		case 7: countOdd();
+		case 7:
+			if (stack.init) countOdd();
+			else cout<<"ERROR: La pila no se ha inicializado"<<endl;
 			break;
-		case 8: addAll();
+		case 8: 
+		
+			if (stack.init) addAll();
+			else cout<<"ERROR: La pila no se ha inicializado"<<endl;
 			break;
-		case 9: sortUp();
+		case 9:
+			
+			if (stack.init) sortUp();
+			else cout<<"ERROR: La pila no se ha inicializado"<<endl;
 			break;
-		case 10: clear();
+		case 10: 
+		
+			if (stack.init) clear();
+			else cout<<"ERROR: La pila no se ha inicializado"<<endl;
 			break;
 		case 11: break;
 		default: cout<<"DEFAULT"<<endl;
@@ -116,15 +138,14 @@ void inicializar(){
 	return;
 }
 void deploy(){
-	
 	int nums = stack.getElementNumber(0,0);
 	cout<<" Elementos: "<<stack.deploy(0, nums)<<endl;
 }
 void clear(){
-	if (stack.clear()){
+	if (stack.getTop() != -1){
+		stack.clear();
 		cout<<"La pila ha sido vaciada"<<endl;
-	}
-	else {
+	}else {
 		cout<<"ERROR: La pila ya estaba vacia"<<endl;
 	}
 }
@@ -133,11 +154,16 @@ void countEven(){
 	if (count != -1){
 		cout<<"Pares en pila: "<<count<<endl;
 	}else{
-		cout<<"ERROR: La pila está vacía"<<endl;
+		cout<<"ERROR: La pila esta vacia"<<endl;
 	}
 }
 void countOdd(){
-	cout<<"Impares en pila: "<<stack.countOdd(0,0)<<endl;
+	int count = stack.countOdd(0,0);
+	if (count != -1){
+		cout<<"Impares  en pila: "<<count<<endl;
+	}else{
+		cout<<"ERROR: La pila esta vacia"<<endl;
+	}
 }
 
 void addAll(){

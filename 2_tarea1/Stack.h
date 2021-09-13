@@ -8,18 +8,12 @@ private:
 	int stop;
 	int array[5];
 	string toString;
-	/*
-	string messages[] = {
-		"ERROR: La pila está vacía",
-		"ERROR: La pila ya estaba vacía",
-		"ERROR: La pila no tiene datos que eliminar (UNDERFLOW)",
-		"ERROR: La pila está llena (OVERFLOW)",
-		
-	}*/
 public:
+	bool init = false;
 	void initialize(){
 		top = bottom;
 		stop = getSize()-1;
+		init = true;
 	}
 	bool isEmpty(){
 		if ( top != bottom ){ return false; }
@@ -57,7 +51,7 @@ public:
 		}
 	}
 	bool clear(){
-		if ( !isEmpty() ){
+		if ( !isEmpty()){
 			if (top > bottom){
 				pop();
 				clear();
@@ -68,6 +62,7 @@ public:
 			return false;
 		}
 	}
+	
 	int getSize(){
 		return sizeof(array)/sizeof(*array);
 	}
@@ -81,7 +76,6 @@ public:
 			getElementNumber(++i, n);
 		}
 	}
-	
 	int countEven(int i, int n){
 		if (!isEmpty()){
 			if (i == getElementNumber(0,0)){
@@ -97,14 +91,18 @@ public:
 		}
 	}
 	
-	int countOdd(int i, int n){
-		if (i == getElementNumber(0,0)){
-			return n;
-		}else{
-			if (*(array + i)%2!=0){
-				++n;
-			}
-			countOdd(++i,n);
+	int countOdd(int i, int n)	{
+		if (!isEmpty()){
+			if (i == getElementNumber(0,0)){
+				return n;
+			}else{
+				if (*(array + i)%2!=0){
+					++n;
+				}
+				countEven(++i,n);
+			}	
+		}else {
+			return -1;
 		}
 	}
 	
@@ -121,7 +119,6 @@ public:
 		}else{
 			return -1;
 		}
-
 	}
 	
 	int* getArray(){
@@ -146,27 +143,3 @@ public:
 		}
 	}
 };
-
-/*
-	string deploy(int i, int e){
-		if ( !isEmpty() ){
-			makeToString(i, e);
-			cout<<" /nStacks deploy is returning here"<<endl;
-			return toString;
-		}else {
-			toString = "empty";
-			return toString;
-		}
-	}
-	void makeToString(int i, int e){
-		if (i == e){
-			cout<<toString<<endl; //DOES NOT WORK
-			return;
-		}else{
-			cout<<"array: "<<array[i]<<endl;
-			toString += to_string(array[i]) + ", ";
-			makeToString(++i, e);
-		}
-	}	
-	
-*/
