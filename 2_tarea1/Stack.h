@@ -4,17 +4,14 @@ using namespace std;
 class Stack{
 private:
 	int bottom = -1;
-	int top;
+	int top = bottom;
 	int stop;
-	int array[5];
-	string toString;
+
+	
 public:
-	bool init = false;
-	void initialize(){
-		top = bottom;
-		stop = getSize()-1;
-		init = true;
-	}
+	string expresion;
+	int pila[128];
+	string postfija;
 	bool isEmpty(){
 		if ( top != bottom ){ return false; }
 		else { return true; }
@@ -27,7 +24,6 @@ public:
 		if ( !isFull() ){
 			++top;
 			*(array + top) = n;
-			//toString = deploy();
 			return true;
 		}else {
 			return false;
@@ -37,7 +33,6 @@ public:
 		if ( !isEmpty() ){
 			*(array + top) = NULL;
 			--top;
-			//toString = deploy();
 			return true;
 		}else{
 			return false;
@@ -62,7 +57,6 @@ public:
 			return false;
 		}
 	}
-	
 	int getSize(){
 		return sizeof(array)/sizeof(*array);
 	}
@@ -76,50 +70,31 @@ public:
 			getElementNumber(++i, n);
 		}
 	}
-	int countEven(int i, int n){
-		if (!isEmpty()){
-			if (i == getElementNumber(0,0)){
-				return n;
-			}else{
-				if (*(array + i)%2==0){
-					++n;
-				}
-				countEven(++i,n);
-			}	
-		}else {
-			return -1;
-		}
-	}
 	
-	int countOdd(int i, int n)	{
-		if (!isEmpty()){
-			if (i == getElementNumber(0,0)){
-				return n;
-			}else{
-				if (*(array + i)%2!=0){
-					++n;
-				}
-				countEven(++i,n);
-			}	
-		}else {
-			return -1;
-		}
-	}
-	
-	int addAll(int i, int n){
-		if (!isEmpty()){
-			if (i == getSize()){
-				return n;
-			}else{
-				if (*(array + i) != NULL){
-					n += *(array + i);
-				}
-				addAll(++i,n);
-			}			
+	void recorrerExpresion(int i){ // expresion.size();
+		if (i == expresion.size()){
+			cout<<postfija;
+			return;
 		}else{
-			return -1;
+			switch (expresion[i]){
+				case '^':
+					cout<<"^"<<endl;
+					break;
+				default:
+					cout<<"eh"<<endl;
+			}
 		}
 	}
+	
+	/*
+	^ - 94
+	/ - 47
+	* - 42
+	+ - 43
+	- - 45
+	( - 40
+	) - 41
+	*/
 	
 	int* getArray(){
 		return array;
@@ -143,3 +118,7 @@ public:
 		}
 	}
 };
+
+/*
+PILA con postfija y operadores
+*/
