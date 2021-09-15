@@ -42,7 +42,17 @@ public:
 			return false;
 		}
 	}
-	int getTop(){
+	char pop2(){
+		if ( !isEmpty() ){
+			char c = *(pila + top); 
+			*(pila + top) = '\0';
+			--top;
+			return c;
+		}else{
+			return '\0';
+		}
+	}
+	char getTop(){
 		if (!isEmpty()){
 			return *(pila + top);
 		}else{

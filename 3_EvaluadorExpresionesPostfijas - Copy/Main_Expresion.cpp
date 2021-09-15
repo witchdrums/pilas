@@ -5,26 +5,25 @@
 using namespace std;
 
 void toUpper(char* str, int, int);
-void toUpper2(char* str, int);
 void deploy(char* str, int);
 int countChars(char* expresion, int i);
 
 void initEvaluador();
 
-//Stack stack;
 Evaluador evaluador;
 
 int main(){
-	initEvaluador();
-	return 0;
-}
-
-void initEvaluador(){
+	cout<<"  INFIJA >> ";
 	char expresion[128];
-	cout<<"IN >> ";
 	cin.getline(expresion, 128);
+	int expresionSize = countChars(expresion, 0);
+	toUpper(expresion, 0, expresionSize);
 	
-	evaluador.setInfija(expresion);
+	evaluador.setInfija(expresion, expresionSize);
+
+	cout<<"\nPOSTFIJA << ";
+	deploy(evaluador.getPostfija().getPila(), evaluador.getPostfija().getSize(0));
+	return 0;
 }
 
 void deploy(char *expresion, int size){
@@ -36,7 +35,6 @@ void deploy(char *expresion, int size){
 	}
 }
 
-
 int countChars(char* expresion, int i){
 	if ( *(expresion + i) ==  '\0'){
 		return i;
@@ -47,7 +45,6 @@ int countChars(char* expresion, int i){
 
 void toUpper(char* str, int i, int size){
 	if ( i == size ) {
-		//cout<<"return: "<<str<<endl;
 		return;
 	}else{
 		if (str[i] > 96 && str[i] < 123 ){
