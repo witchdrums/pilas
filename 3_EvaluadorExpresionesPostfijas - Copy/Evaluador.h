@@ -1,27 +1,29 @@
 #include "Stack.h"
 class Evaluador{
 private:
-	char *infija;
-	int infijaSize = 0;
-	Stack pila;
+	char *infija; // apunta al arreglo char de la expresion
+	int infijaSize = 0; // tamaño de ese arreglo
+	Stack pila;	//pilas
 	Stack posfija;
 	
 public:
-	void setInfija(char* expresion, int expresionSize){
+	void inicializarEvaluador(char* expresion, int expresionSize){
 		infija = expresion;
 		infijaSize = expresionSize;
 		
 		evaluar(0);
+		
 		return;
 	}
-	void paso4(){
+	void paso4(){ // pasar contenidos de pila a posfija
 		if (pila.isEmpty()){
 			return;
 		}else{
-			if ( pila.getTop() == '(' ){
+			if ( pila.getCima() == '(' ){
 				pila.pop();
 			}else{
-				posfija.push( pila.pop2() );	
+				posfija.push(pila.getCima());
+				pila.pop();	
 			}
 			paso4();
 		}
@@ -32,10 +34,15 @@ public:
 			return;
 		}else{
 			if ( *(infija + i) > 64 && *(infija + i) < 91){	// PASO 1
+			
 				posfija.push(*(infija + i));
+				
 			}else if (pila.isEmpty()){	//PASO 2.a
+			
 				pila.push(*(infija + i));
+				
 			}else{  //PASO 2.b
+			
 				switch ( *(infija + i) ){
 					case '(':
 					case '^':
@@ -43,19 +50,21 @@ public:
 						break;
 					case '*':
 					case '/':
-						if ( pila.getTop() != '^' && pila.getTop() != '*' && pila.getTop() != '/' ){
+						if ( pila.getCima() != '^' && pila.getCima() != '*' && pila.getCima() != '/' ){
 							pila.push(*(infija + i));
 						}else{
-							posfija.push( pila.pop2() );
+							posfija.push(pila.getCima());
+							pila.pop();
 							--i;
 						}
 						break;
 					case '+':
 					case '-':
-						if ( pila.getTop() == '('){
+						if ( pila.getCima() == '('){
 							pila.push(*(infija + i));
 						}else{
-							posfija.push( pila.pop2() );
+							posfija.push(pila.getCima());
+							pila.pop();
 							--i;
 						}
 						break;
@@ -67,12 +76,13 @@ public:
 			evaluar(++i);
 		}
 	}
-	void paso3(){
-		if (pila.getTop() == '('){
+	void paso3(){ // pasar contenido de pila hasta topar con (
+		if (pila.getCima() == '('){
 			pila.pop();
 			return;
 		}else{
-			posfija.push( pila.pop2() );
+			posfija.push(pila.getCima());
+			pila.pop();
 			paso3();
 		}
 	}
