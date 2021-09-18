@@ -33,8 +33,13 @@ void initConvertidor();
 ConvertidorPostfija convertidor;
 Evaluador evaluador;
 
+
+string expresion = "2+3";
+//string expresion = "1.4-(22^2*14)/(12+37/21^2)";
 //string expresion = "(1/2)^3+4*(5-6)"; //(1/2)^3+4*(5-6)	31+2/(3-1)
-string expresion = "3+2/(3-1)";
+//string expresion = "3.1+2/(3-1)";
+//a-(b^c*d)/(b+c/a^d)
+//1-(2^3*4)/(2+3/1^4)
 
 int expresionSize;
 
@@ -42,7 +47,7 @@ int main(){
 	int eleccion;
 	infijaEstatica();
 	do{
-		system("CLS");
+		//system("CLS");
 		cout<<"Convertidor de Expresiones Aritméticas\n"<<
 		"--------------------------------";
 		cout<<"\nExpresion: "; consultarInfija();
@@ -92,7 +97,10 @@ void leerEleccion(int &eleccion){
 			break;
 		case 7:
 			evaluador.setPostfija(convertidor.getPostfija());
-			evaluador.evaluar(0, convertidor.getPila().getSize(0));
+			cout<<"case7.evaluador.getPostfija().getSize(0): "<<evaluador.getPostfija().getSize(0)<<endl;
+			cout<<"case7.convertidor.getNumOperaciones: "<<convertidor.getNumOperaciones()<<endl;
+			evaluador.evaluar(0, convertidor.getNumOperaciones());
+			cout<<endl;
 			break;
 		/*
 		case :

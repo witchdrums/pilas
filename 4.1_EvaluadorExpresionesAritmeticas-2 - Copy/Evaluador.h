@@ -7,6 +7,7 @@ TO DO:
 
 #include <iostream>
 #include <string>
+#include <math.h>
 using namespace std;
 class Evaluador{
 private:
@@ -14,7 +15,7 @@ private:
 	Stack pila;	//pilas
 	Stack postfija;
 	string operacion;
-	int resultado = 0;
+	float resultado = 0;
 	
 	
 	
@@ -23,8 +24,8 @@ public:
 	void setPostfija(Stack p){
 		postfija = p;
 		invertirPostfija();
-		cout<<"evaluador.postfija: ";
-		postfija.desplegar(postfija.getSize(0));
+		//cout<<"evaluador.postfija: ";
+		//postfija.desplegar(postfija.getSize(0));
 	}
 	
 	void invertirPostfija(){
@@ -53,51 +54,62 @@ public:
 	
 	void evaluar(int i, int numOperaciones){
 		if (i == numOperaciones){
+			cout<<"evaluar.return.pila.getCima: "<<pila.getCima()<<endl;
+			resultado = stof( pila.getCima() );
+			cout<<"evaluar.return.resultado: "<<resultado<<endl;
+			pila.pop();
 			return;
 		}else{
-			if ( isInt( postfija.getCima(), 0, postfija.getCima().size() ) ){
+			if ( isNum( postfija.getCima(), 0, postfija.getCima().size() ) ){
 				pila.push( postfija.getCima() );
 			}else{
 				operacion += postfija.getCima();
-				resultado += operar();
+				pila.push(to_string(operar())) ;
 				++i;
 			}
 			operacion = "";
 			postfija.pop();
+			evaluar(i, numOperaciones);
 		}
 	}
-	
-	int operar(){
+	float operar(){
 		cout<<"operar.operacion: "<<operacion<<endl;
-		int a = stoi(pila.getCima());
-		int b = stoi(pila.getCima());
+		float b = stof(pila.getCima());
+		
+		pila.pop();
+		float a = stof(pila.getCima());
+		pila.pop();
 		cout<<"operar.a: "<<a<<endl;
 		cout<<"operar.b: "<<b<<endl;
 		if ( operacion == "^"){
-			return a^b;
+			cout<<"evaluador.operar:"<<pow(a,b)<<endl;
+			return pow(a,b);
 		}else if ( operacion == "/" ){
+			cout<<"evaluador.operar:"<<a/b<<endl;
 			return a/b;
 		}else if ( operacion == "*" ){
+			cout<<"evaluador.operar:"<<a*b<<endl;
 			return a*b;
 		}else if ( operacion == "+" ){
+			cout<<"evaluador.operar:"<<a+b<<endl;
 			return a+b;
 		}else if ( operacion == "-" ){
+			cout<<"evaluador.operar:"<<a-b<<endl;
 			return a-b;
 		}else{
 			cout<<"Error: mala operacion"<<endl;
 			return -999;
 		}
-
 	}
 	
-	int getResultado(){
+	float getResultado(){
 		return resultado;
 	}
 	
-	bool isInt(string str, int j, int size){
+	bool isNum(string str, int j, int size){
 		string str3 = "";
 		for (int i = 0; i<size; i++){
-			if (str[i] > 47 && str[i] < 58){
+			if (str[i] > 47 && str[i] < 58 || str[i] == 46){
 				str3 += str[i];
 				++j;
 			}
@@ -106,6 +118,14 @@ public:
 			return true; 
 		}
 		else{ return false; }
+	}
+	
+	Stack getPostfija(){
+		return postfija;
+	}
+	
+	Stack getPila(){
+		return pila;
 	}
 };
 
@@ -117,14 +137,24 @@ public:
 //post: 3231-/+
 
 /*
+analiza, caracter por caracter, a la postfija invertida
+si un caracter es operando: pasalo a la pila
+si no: 
+	saca un numero de la pila; 
+	saca el operador; 
+	saca otro numero de la pila; 
+	has la operacion; 
+	mete resultado a pila
+
 postfija invertida:		pila:	operacion:
  +/-1323				
  +/-132					3
  +/-13					32
  +/-1					323
- +/-					3231	3-1 = 2
- +/						322		2/2 = 1
- +						31		3+1 = 4
+ +/-					3231	3-1 = [2]
+ +/						32[2]	2/2 = 1
+ +						3[1]	3+1 = 4
+ 						[4]
 
 
 */

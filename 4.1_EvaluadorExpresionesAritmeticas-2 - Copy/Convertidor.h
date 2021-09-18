@@ -8,6 +8,7 @@ class ConvertidorPostfija{
 private:
 	string infija[64]; // = {"123", "+", "321"}
 	int infijaSize = 0; // tamaño de ese arreglo
+	int numOperaciones = 0;
 	Stack pila;	//pilas
 	Stack posfija;
 	
@@ -30,18 +31,19 @@ public:
 	}
 	void extraerOperadores(string expresion, int i){
 		if (i == 0){
+			//numOperaciones = pila.getSize(0);
 			return;
 		}else{
 			extraerOperadores(expresion, --i);
 			switch ( expresion[i] ){
-				case '(':
-				case ')':
 				case '^':
 				case '*':
 				case '/':
 				case '+':
 				case '-':
 					{
+						++numOperaciones;
+						cout<<"numOperaciones: "<<numOperaciones<<endl;
 						string str = "";
 						str = expresion[i];
 						pila.push( str );
@@ -163,19 +165,13 @@ public:
 	
 	bool isInt(string str, int j, int size){
 		string str3 = "";
-		/*ALL GOOD:
-		cout<<"isInt.str: "<<str<<endl;
-		cout<<"isInt.j: "<<j<<endl;
-		cout<<"isInt.size: "<<size<<endl;*/
 		for (int i = 0; i<size; i++){
 			if (str[i] > 47 && str[i] < 58){
 				str3 += str[i];
-				//cout<<"isInt.str[i]: "<<str[i]<<endl; //GOOD
 				++j;
 			}
 		}
 		if (size == j){
-			//cout<<"int: "<<str3<<endl;
 			return true; 
 		}
 		else{ return false; }
@@ -201,6 +197,10 @@ public:
 			desplegarPila2(--size);
 			cout<<*(pila.getPila() + size);
 		}
+	}
+	
+	int getNumOperaciones(){
+		return numOperaciones;
 	}
 	
 	void clearInfija(){
