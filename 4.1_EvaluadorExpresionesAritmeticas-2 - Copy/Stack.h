@@ -6,7 +6,7 @@ private:
 	int bottom = -1;
 	int top = bottom;
 	int stop;
-	char pila[64];
+	string pila[64];
 	
 public:
 	bool isEmpty(){
@@ -17,7 +17,7 @@ public:
 		if (top == getSize()-1){ return true; }
 		else { return false; }
 	}
-	bool push(char n){
+	bool push(string n){
 		if ( !isFull() ){
 			++top;
 			*(pila + top) = n;
@@ -28,24 +28,23 @@ public:
 	}
 	bool pop(){
 		if ( !isEmpty() ){
-			*(pila + top) = '\0';
+			*(pila + top) = "";
 			--top;
 			return true;
 		}else{
 			return false;
 		}
 	}
-	char getCima(){
+	string getCima(){
 		if (!isEmpty()){
 			return *(pila + top);
 		}else{
-			return 'e';
+			return "e";
 		}
 	}
 	bool clear(){
 
 			if (top > bottom){
-				cout<<"clear"<<endl;
 				pop();
 				clear();
 			}else{
@@ -66,27 +65,18 @@ public:
 	}
 
 	int getSize(int i){ // 0
-		if ( *(pila + i) ==  '\0'){
+		if ( *(pila + i) ==  ""){
 			return i;
 		}else{
 			getSize(++i);
 		}
 	}
 	
-	char* getPila(){
+	string* getPila(){
 		return pila;
 	}
 	
-	void toUpper(int i, int size){ //0 y size
-	if ( i == size ) {
-		//cout<<"return: "<<str<<endl;
-		return;
-	}else{
-		if (pila[i] > 96 && pila[i] < 123 ){
-			pila[i] -= 32;
-		}
-		toUpper(++i, size);
-	}
-}
+
+
 
 };

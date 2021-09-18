@@ -45,7 +45,6 @@ public:
 	bool clear(){
 		if ( !isEmpty() ){
 			if (top > bottom){
-				cout<<"clear"<<endl;
 				pop();
 				clear();
 			}else{

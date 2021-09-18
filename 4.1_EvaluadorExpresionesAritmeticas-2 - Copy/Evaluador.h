@@ -1,130 +1,47 @@
+/*
+TO DO:
+		- hay un problema con la creacion de la infija, en la que se incluyen NULLs
+*/
+
 #include "Stack.h"
+
+#include <iostream>
+using namespace std;
 class Evaluador{
 private:
-	char *infija; // apunta al arreglo char de la expresion
 	int infijaSize = 0; // tamaño de ese arreglo
 	Stack pila;	//pilas
-	Stack posfija;
+	Stack postfija;
+	int resultado;
+	
 	
 public:
-	void inicializarEvaluador(char* expresion, int expresionSize){
-		infija = expresion;
-		infijaSize = expresionSize;
-		extraerOperadores(infijaSize);
-		
-		return;
-	}
-	void extraerOperadores(int i){
-		if (i == 0){
-			return;
-		}else{
-			extraerOperadores(--i);
-			switch ( *(infija + i) ){
-				case '(':
-				case ')':
-				case '^':
-				case '*':
-				case '/':
-				case '+':
-				case '-':
-					pila.push( *(infija + i) );
-					break;
-				default:
-					break;
-			}
-		}
+	
+	void setPostfija(Stack p){
+		postfija = p;
+		cout<<"evaluador.postfija: ";
+		postfija.desplegar(postfija.getSize(0));
 	}
 	
-	void paso4(){ // pasar contenidos de pila a posfija
-		if (pila.isEmpty()){
-			return;
-		}else{
-			if ( pila.getCima() == '(' ){
-				pila.pop();
-			}else{
-				posfija.push(pila.getCima());
-				pila.pop();	
-			}
-			paso4();
-		}
-	}
-	void evaluar(int i){ // i = 0
-		if (i == infijaSize){
-			paso4();
-			return;
-		}else{
-			if ( *(infija + i) > 47 && *(infija + i) < 58){	// PASO 1
-				posfija.push(*(infija + i));
-			}else if (pila.isEmpty()){	//PASO 2.a
-				pila.push(*(infija + i));
-			}else{  //PASO 2.b
-				switch ( *(infija + i) ){
-					case '(':
-					case '^':
-						pila.push(*(infija + i));
-						break;
-					case '*':
-					case '/':
-						if ( pila.getCima() != '^' && pila.getCima() != '*' && pila.getCima() != '/' ){
-							pila.push(*(infija + i));
-						}else{
-							posfija.push(pila.getCima());
-							pila.pop();
-							--i;
-						}
-						break;
-					case '+':
-					case '-':
-						if ( pila.getCima() == '('){
-							pila.push(*(infija + i));
-						}else{
-							posfija.push(pila.getCima());
-							pila.pop();
-							--i;
-						}
-						break;
-					case ')':
-						paso3();
-						break;
-				}
-			}
-			evaluar(++i);
-		}
-	}
-	void paso3(){ // pasar contenido de pila hasta topar con (
-		if (pila.getCima() == '('){
-			pila.pop();
-			return;
-		}else{
-			posfija.push(pila.getCima());
-			pila.pop();
-			paso3();
-		}
-	}
-
-	Stack getPostfija(){
-		return posfija;
-	}
-	Stack getPila(){
-		return pila;
-	}
-
-	
-	void clearInfija(){
-		
-	}
-	
-	int clearStacks(){
-		if ( pila.clear() ){
-			if ( posfija.clear() ){
-				return 1;
-			}else{
-				return 2;
-			}
-		}else{
-			return 3;
-		}
-	}
 	
 };
 
+//infija: 3+2/(3-1)
+//3+2/(2)
+//3+1
+//4
+
+//post: 3231-/+
+
+/*
+postfija invertida:		pila:	operacion:
+ +/-1323				
+ +/-132					3
+ +/-13					32
+ +/-1					323
+ +/-					3231	3-1 = 2
+ +/						322		2/2 = 1
+ +						31		3+1 = 4
+
+
+*/

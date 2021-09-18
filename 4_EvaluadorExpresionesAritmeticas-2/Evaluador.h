@@ -10,7 +10,7 @@ public:
 	void inicializarEvaluador(char* expresion, int expresionSize){
 		infija = expresion;
 		infijaSize = expresionSize;
-		extraerOperadores(infijaSize);
+		//extraerOperadores(infijaSize);
 		
 		return;
 	}
@@ -56,38 +56,39 @@ public:
 			return;
 		}else{
 			if ( *(infija + i) > 64 && *(infija + i) < 91){	// PASO 1
+			cout<<"fuck";
 				posfija.push(*(infija + i));
 			}else if (pila.isEmpty()){	//PASO 2.a
 				pila.push(*(infija + i));
 			}else{  //PASO 2.b
-				switch ( *(infija + i) ){
-					case '(':
-					case '^':
+				if ( *(infija+i) == '(' || *(infija+i) == '^' ){
+					
+					pila.push(*(infija + i));
+					
+				}else if ( *(infija+i) == '*' || *(infija+i) == '/' ){
+					
+					if ( pila.getCima() != '^' && pila.getCima() != '*' && pila.getCima() != '/' ){
 						pila.push(*(infija + i));
-						break;
-					case '*':
-					case '/':
-						if ( pila.getCima() != '^' && pila.getCima() != '*' && pila.getCima() != '/' ){
-							pila.push(*(infija + i));
-						}else{
-							posfija.push(pila.getCima());
-							pila.pop();
-							--i;
-						}
-						break;
-					case '+':
-					case '-':
-						if ( pila.getCima() == '('){
-							pila.push(*(infija + i));
-						}else{
-							posfija.push(pila.getCima());
-							pila.pop();
-							--i;
-						}
-						break;
-					case ')':
-						paso3();
-						break;
+					}else{
+						posfija.push(pila.getCima());
+						pila.pop();
+						--i;
+					}
+					
+				}else if ( *(infija+i) == '+' || *(infija+i) == '-' ) {
+					
+					if ( pila.getCima() == '('){
+						pila.push(*(infija + i));
+					}else{
+						posfija.push(pila.getCima());
+						pila.pop();
+						--i;
+					}
+					
+				}else if (*(infija+i) == ')'){
+					
+					paso3();
+					
 				}
 			}
 			evaluar(++i);
@@ -129,4 +130,50 @@ public:
 	}
 	
 };
+
+/*
+void evaluar(int i){ // i = 0
+		if (i == infijaSize){
+			paso4();
+			return;
+		}else{
+			if ( *(infija + i) > 64 && *(infija + i) < 91){	// PASO 1
+				posfija.push(*(infija + i));
+			}else if (pila.isEmpty()){	//PASO 2.a
+				pila.push(*(infija + i));
+			}else{  //PASO 2.b
+				switch ( *(infija + i) ){
+					case '(':
+					case '^':
+						pila.push(*(infija + i));
+						break;
+					case '*':
+					case '/':
+						if ( pila.getCima() != '^' && pila.getCima() != '*' && pila.getCima() != '/' ){
+							pila.push(*(infija + i));
+						}else{
+							posfija.push(pila.getCima());
+							pila.pop();
+							--i;
+						}
+						break;
+					case '+':
+					case '-':
+						if ( pila.getCima() == '('){
+							pila.push(*(infija + i));
+						}else{
+							posfija.push(pila.getCima());
+							pila.pop();
+							--i;
+						}
+						break;
+					case ')':
+						paso3();
+						break;
+				}
+			}
+			evaluar(++i);
+		}
+	}
+*/
 

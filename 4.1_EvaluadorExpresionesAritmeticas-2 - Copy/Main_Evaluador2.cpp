@@ -11,12 +11,12 @@ TO DO:
 #include <iostream>
 #include <stdio.h>
 #include <ctype.h>
-#include "Evaluador.h"
+#include "Convertidor.h"
 using namespace std;
 
-void aMayusculas(char* str, int, int);
-void desplegar(char* str, int);
-int countChars(char* expresion, int i);
+void aMayusculas(string* str, int, int);
+//void desplegar(string* str, int);
+int countstrings(string* expresion, int i);
 void leerEleccion(int&);
 void ingresarInfija();
 void consultarInfija();
@@ -25,36 +25,28 @@ void mostrarCimaDePila();
 void desplegarPila();
 void reiniciar();
 void infijaEstatica();
+void resultado();
 
-void initEvaluador();
+void initConvertidor();
 
-Evaluador evaluador;
-string expresion[128] = {"3", "+", "2", "/", "(", "3", "-", "1", ")"};
-//3+2/(3-1)
-//3+2/2
-//4
+ConvertidorPostfija convertidor;
 
-//3231-/+
-//323-1/+
-//322/+
-//32/2+
-//31+
-//3+1
-//4
+string expresion = "(1/2)^3+4*(5-6)"; //(1/2)^3+4*(5-6)	31+2/(3-1)
+
 int expresionSize;
 
 int main(){
 	int eleccion;
 	infijaEstatica();
 	do{
-		system("CLS");
-		cout<<"Evaluador de Expresiones Aritméticas\n"<<
+		//system("CLS");
+		cout<<"Convertidor de Expresiones Aritméticas\n"<<
 		"--------------------------------";
 		cout<<"\nExpresion: "; consultarInfija();
 		cout<<"\nPila: "; desplegarPila();
-		cout<<"\n    Cima: "<<evaluador.getPila().getCima();
+		cout<<"\n    Cima: "<<convertidor.getPila().getCima();
 		cout<<"\nPostfija: ";
-		desplegar(evaluador.getPostfija().getPila(), evaluador.getPostfija().getSize(0));
+		convertidor.desplegarPostfija();
 		cout<<"\nResultado postfija: "<<
 		"\n--------------------------------\n"<<
 		"Eliga una opción: \n\n"<<
@@ -74,7 +66,7 @@ int main(){
 void leerEleccion(int &eleccion){
 	switch (eleccion){
 		case 1:
-			ingresarInfija();
+			//ingresarInfija();
 			
 			break;
 		case 2:
@@ -88,14 +80,14 @@ void leerEleccion(int &eleccion){
 			mostrarCimaDePila();
 			break;
 		case 5:
-			desplegarPila();
+			//desplegarPila();
 			break;
 		case 6:
 			reiniciar();
 			break;
-		/*
-		case :
+		case 7:
 			break;
+		/*
 		case :
 			break;
 		case :
@@ -109,22 +101,26 @@ void leerEleccion(int &eleccion){
 	system("pause");
 }
 
+void resultado(){
+	
+}
+
 void mostrarCimaDePila(){
-	if (!evaluador.getPila().isEmpty()){
-		cout<<" Cima de pila de operadores << "<< evaluador.getPila().getCima();
+	if (!convertidor.getPila().isEmpty()){
+		cout<<" Cima de pila de operadores << "<< convertidor.getPila().getCima();
 	}else{
 		cout<<" La pila de operadores está vacía"<<endl;
 	}
 }
 void reiniciar(){
 	cout<<"\n----[6] Vaciar pila y reiniciar-\n"<<endl;
-	evaluador.clearStacks();
+	convertidor.clearStacks();
 
 }
 /*
 void reiniciar(){
 	cout<<"\n----[6] Vaciar pila y reiniciar-\n"<<endl;
-	int result = evaluador.clearStacks();
+	int result = convertidor.clearStacks();
 	switch (result){
 		case 1:
 			cout<<" La pila ha sido vaciada"<<endl;
@@ -142,82 +138,66 @@ void reiniciar(){
 }
 */
 void desplegarPila(){
-	evaluador.getPila().desplegar( evaluador.getPila().getSize(0) );
+	convertidor.getPila().desplegar( convertidor.getPila().getSize(0) );
 }
 
+/*
 void ingresarInfija(){
 	cin.ignore();
 	cout<<"  Ingrese infija >> ";
 	cin.getline(expresion, 128);
 	
-	expresionSize = countChars(expresion, 0);
+	expresionSize = countstrings(expresion, 0);
 	aMayusculas(expresion, 0, expresionSize);
 	
-	evaluador.inicializarEvaluador(expresion, expresionSize); 
+	convertidor.inicializarConvertidor(expresion, expresionSize); 
 	cout<<"\n\n";
-}
+}*/
 
 void infijaEstatica(){
-	expresionSize = countChars(expresion, 0);
 	//aMayusculas(expresion, 0, expresionSize);
 	
-	evaluador.inicializarEvaluador(expresion, expresionSize); 
+	convertidor.inicializarConvertidor(expresion, expresion.size()); 
 	cout<<"\n\n";
 }
 
 void consultarInfija(){
-	desplegar(expresion, expresionSize);
+	cout<<expresion;
 	cout<<"\n";
 }
 void infijaAPostfija(){
-	evaluador.clearStacks();
-	evaluador.evaluar(0);
+	convertidor.clearStacks();
+	cout<<"PILA:";
+	convertidor.desplegarPila();
+	convertidor.evaluar(0);
 
 }
 /*
 void infijaAPostfija(){
 	desplegarPila();
-	evaluador.getPila().clear();
+	convertidor.getPila().clear();
 	desplegarPila();
 	
 	cout<<"\n Expresion infija <<";
 	consultarInfija();
-	evaluador.evaluar(0);
+	convertidor.evaluar(0);
 	cout<<"\n Expresion postfija <<";
-	desplegar(evaluador.getPostfija().getPila(), evaluador.getPostfija().getSize(0));
+	desplegar(convertidor.getPostfija().getPila(), convertidor.getPostfija().getSize(0));
 	cout<<endl;
 }
 */
-void desplegar(char *expresion, int size){
-	if (size == 0){
-		return;
-	}else{
-		desplegar(expresion, --size);
-		cout<<*(expresion + size);
-	}
-}
 
-int countChars(char* expresion, int i){
-	if ( *(expresion + i) ==  '\0'){
+int countstrings(string* expresion, int i){
+	if ( *(expresion + i) ==  "\0"){
 		return i;
 	}else{
-		countChars(expresion, ++i);
+		countstrings(expresion, ++i);
 	}
 }
 
-void aMayusculas(char* str, int i, int size){
-	if ( i == size ) {
-		return;
-	}else{
-		if (str[i] > 96 && str[i] < 123 ){
-			str[i] -= 32;
-		}
-		aMayusculas(str, ++i, size);
-	}
-}
 
-int getSize(char *expresion, int i){ // 0
-	if ( *(expresion + i) ==  '\0'){
+int getSize(string *expresion, int i){ // 0
+	if ( *(expresion + i) ==  "\0"){
 		return i;
 	}else{
 		getSize(expresion, ++i);
