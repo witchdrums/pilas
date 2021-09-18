@@ -12,6 +12,7 @@ TO DO:
 #include <stdio.h>
 #include <ctype.h>
 #include "Convertidor.h"
+#include "Evaluador.h"
 using namespace std;
 
 void aMayusculas(string* str, int, int);
@@ -30,8 +31,10 @@ void resultado();
 void initConvertidor();
 
 ConvertidorPostfija convertidor;
+Evaluador evaluador;
 
-string expresion = "(1/2)^3+4*(5-6)"; //(1/2)^3+4*(5-6)	31+2/(3-1)
+//string expresion = "(1/2)^3+4*(5-6)"; //(1/2)^3+4*(5-6)	31+2/(3-1)
+string expresion = "3+2/(3-1)";
 
 int expresionSize;
 
@@ -39,7 +42,7 @@ int main(){
 	int eleccion;
 	infijaEstatica();
 	do{
-		//system("CLS");
+		system("CLS");
 		cout<<"Convertidor de Expresiones Aritméticas\n"<<
 		"--------------------------------";
 		cout<<"\nExpresion: "; consultarInfija();
@@ -47,8 +50,10 @@ int main(){
 		cout<<"\n    Cima: "<<convertidor.getPila().getCima();
 		cout<<"\nPostfija: ";
 		convertidor.desplegarPostfija();
-		cout<<"\nResultado postfija: "<<
-		"\n--------------------------------\n"<<
+		cout<<"\nPostfija inversa: ";
+		evaluador.desplegarPostfija();
+		cout<<"\nResultado postfija: "<<evaluador.getResultado();
+		cout<<"\n--------------------------------\n"<<
 		"Eliga una opción: \n\n"<<
 		"[3] Convertir infija a postfija\n"<<
 		"[6] Vaciar pila y reiniciar expresiones\n"<<
@@ -86,6 +91,8 @@ void leerEleccion(int &eleccion){
 			reiniciar();
 			break;
 		case 7:
+			evaluador.setPostfija(convertidor.getPostfija());
+			evaluador.evaluar(0, convertidor.getPila().getSize(0));
 			break;
 		/*
 		case :
