@@ -43,7 +43,7 @@ public:
 				case '-':
 					{
 						++numOperaciones;
-						cout<<"numOperaciones: "<<numOperaciones<<endl;
+						out<<"numOperaciones: "<<numOperaciones<<endl;
 						string str = "";
 						str = expresion[i];
 						pila.push( str );
