@@ -108,10 +108,10 @@ void resultado(){
 		convertidor.evaluar(0);
 		cout<<"ATENCION: La expresion fue convertida a postfija"<<endl;
 	}
-	convertidor.invertirPostfija();
-	cout<<"Expresion infija: "<<expresion<<endl;
+	cout<<"\nExpresion infija: "<<expresion<<endl;
 	cout<<"Expresion postfija: ";
 	convertidor.desplegarPostfija();
+	convertidor.invertirPostfija();
 	cout<<endl;
 	convertidor.evaluar2(0, convertidor.getNumOperaciones());
 	cout<<endl;

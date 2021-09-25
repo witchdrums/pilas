@@ -151,8 +151,6 @@ public:
 
 
 
-Infija:   1.432-(22^2*14)/(12+37/21^2)
-postfija: 1.432 22 2 ^ 14 * 12 37 21 2 ^ / + / -
 
 postfija									pila operadores		operacion
 1.432 22 2 ^ 14 * 12 37 21 2 ^ / + / -		-
@@ -165,6 +163,11 @@ postfija									pila operadores		operacion
 1.432 22 2 ^ 14 * [12 0.0839]				-/[+]				12 + 0.0839	= 12.0839
 1.432 22 2 ^ 14	* 12.0839					-/*
 
+
+Infija:    1.432-(22^2*14)/(12+37/21^2)
+postfija:  1.432 22 2 ^ 14 * 12 37 21 2 ^ / + / -
+invertida: - / + / ^ 2 21 37 12 * 14 ^ 2 22 1.432
+
 analiza, caracter por caracter, a la postfija invertida
 si un caracter es operando: pasalo a la pilaDeNumeros
 si no: 
@@ -175,6 +178,7 @@ si no:
 	mete resultado a pilaDeNumeros
 
 https://www.youtube.com/watch?v=84BsI5VJPq4
+
 postfija invertida								pilaDeNumeros				operacion
 - / + / ^ 2 21 37 12 * 14 ^ 2 22 1.432			1.432
 - / + / ^ 2 21 37 12 * 14 ^ 2 22				1.432 22
