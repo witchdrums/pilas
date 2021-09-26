@@ -1,7 +1,9 @@
 #include <iostream>
+#include <cmath>
 #include "Stack.h"
 #include "Evaluador.h"
 #include <string>
+#include <stdlib.h>
 using namespace std;
 
 void llenarStack_iterativa(string&);
@@ -21,12 +23,20 @@ int main(){
 	cout<<"STACK: ";
 	stack.deploy(stack.getSize(0));*/
 	
-	string infija;
+	//string infija;
 	//cout<<"infija >>";
 	//cin>>infija;
-	infija = "123+45/(76-8065)";
+	//infija = "1.432-(22^2*14)/(12+37/21^2)";
 	//llenarStack(infija, "", infija.size(), 0);
-	evaluador.inicializar(infija);
+	string infijas[5] = {
+		"1.432-(22^2*14)/(12+37/21^2)",
+		"(1/2)^3+4*(5-6)",
+		"3+2/(3-1)"
+	};
+	
+	evaluador.inicializar(infijas[0]);
+	evaluador.inicializar(infijas[1]);
+	evaluador.inicializar(infijas[2]);
 }
 
 void llenarStack(string &infija, string str, int size, int i){

@@ -83,7 +83,7 @@ public:
 			return;
 		}else{
 			deploy(--i);
-			cout<<*(pila + i)<<", ";
+			cout<<*(pila + i);
 		}
 	}
 	

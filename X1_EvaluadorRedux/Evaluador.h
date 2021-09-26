@@ -3,24 +3,100 @@ private:
 	string expresionOriginal;
 	string comodin;
 	int expresionSize;
-	int numberCount;
+	float resultado;
 	
-	Stack infija;
+	string infija[64];
 	Stack postfija;
 	Stack pila;
 
 public:
+	void reset(){
+		postfija.clear();
+		pila.clear();
+		resultado = 0.0;
+		clearInfija();
+		comodin = "";
+		expresionOriginal = "";
+	}
+	void clearInfija(){
+		if (expresionSize == 0){
+			return;
+		}else{
+			infija[--expresionSize] == "\0";
+			clearInfija();
+		}
+	}
 	void inicializar(string expresion){
 		expresionOriginal = expresion;
 		comodin = "";
-		expresionSize = expresionOriginal.size();
-		llenarInfija(0);
-		countNums(infija.getSize(0));
+		llenarInfija(0,0,expresion.size());
+		cout<<"infija = ";
+		for (int i = 0; i<expresionSize; i++){
+			cout<<infija[i]<<", ";
+		}
+		cout<<endl;
+		
+		convertir(0);
+		
+	
+		cout<<"\nPOST = ";
+		postfija.deploy(postfija.getSize(0));
+		
+		invertirPostfija();
+		cout<<"\nPILA = ";
+		pila.deploy(pila.getSize(0));
+		
+		evaluar();
+		reset();
+		cout<<endl;
 	}
-	void llenarInfija(int i){
-		if (i == expresionSize){
-			infija.push(comodin);
-			infija.deploy(infija.getSize(0));
+	void evaluar(){
+		if ( pila.isEmpty() ){
+			resultado = stof( postfija.getCima() );
+			cout<<"\nResultado = "<<resultado<<endl;
+			return;
+		}else{
+			switch ( pila.getCima()[0] ){
+				case '^':
+				case '/':
+				case '*':
+				case '+':
+				case '-':
+					postfija.push( to_string( operar( ) ) );
+					break;
+				default:
+					postfija.push(pila.getCima());
+			}
+			pila.pop();
+			evaluar();
+		}
+	}
+	float operar(){
+		float a = stof( postfija.getCima() );
+		postfija.pop();
+		float b = stof( postfija.getCima() );
+		postfija.pop();
+
+		switch ( pila.getCima()[0] ){
+			case '^': return pow(b,a);
+			case '/': return b/a;
+			case '*': return b*a;
+			case '+': return b+a;
+			case '-': return b-a;
+		}
+	}
+	void invertirPostfija(){
+		if (postfija.isEmpty()){
+			return;
+		}else{
+			pila.push(postfija.getCima());
+			postfija.pop();
+			invertirPostfija();
+		}
+	}
+	void llenarInfija(int i, int j, int size ){
+		if (i == size){
+			expresionSize = j;
 			return;
 		}else{
 			switch (expresionOriginal[i]){
@@ -31,205 +107,116 @@ public:
 				case '*':
 				case '+':
 				case '-':
-					if (comodin != "") 
-						infija.push(comodin);
+					if (comodin != "") {
+						infija[j++] = comodin;
+					}
 					comodin = expresionOriginal[i];
-					infija.push(comodin);
+					infija[j++] = comodin;
 					comodin = "";
 					break;
 				default:
 					comodin += expresionOriginal[i];
 					break;
 			}
-			llenarInfija(++i);
+			llenarInfija(++i, j, size);
 		}
 	}
-	
-	void countNums(int j){
-		for (int i  = 0; i<j+1; i++){
-			if (isNum(infija.getCima())){
-				++numberCount;
+	void paso4(){ // pasar contenidos de pila a posfija
+		if (pila.isEmpty()){
+			return;
+		}else{
+			if ( pila.getCima()[0] == '(' ){
+				pila.pop();
+			}else{
+				postfija.push(pila.getCima());
+				pila.pop();	
 			}
-			infija.pop();
+			paso4();
 		}
-		cout<<"numberCount = "<<numberCount<<endl;
 	}
-	
-	bool isNum(string str){
-		for (int i = 0; i<str.size(); i++){
-			if ( !(str[i] > 47 && str[i] < 58 || str[i] == 46) ){
+	void convertir(int i){
+		if (i == expresionSize){
+			paso4();
+			return;
+		}else{
+			/*
+			switch ( infija[i][0] ){
+				case '(':
+				case '^':
+				case '*':
+				case '/':	
+				case '+':
+				case '-':
+				case ')':
+				default:
+					if		
+			}*/
+			if ( isNum(infija[i][0])  ){	// PASO 1
+				postfija.push( infija[i] );
+				//cout<<"isNum: "<<postfija.getCima()<<endl;
+			}else if (pila.isEmpty()){	//PASO 2.a
+				pila.push( infija[i] );
+
+			}else{  //PASO 2.b
+				switch ( infija[i][0] ){
+					case '(':
+					case '^':
+						pila.push( infija[i]);
+						break;
+					case '*':
+					case '/':
+						if ( pila.getCima()[0] != '^' && pila.getCima()[0] != '*' && pila.getCima()[0] != '/' ){
+							pila.push( infija[i] );
+						}else{
+							postfija.push( pila.getCima() );
+							pila.pop();
+							--i;
+						}
+						break;
+					case '+':
+					case '-':
+						if ( pila.getCima()[0] == '('){
+							pila.push( infija[i] );
+						}else{
+							postfija.push( pila.getCima() );
+							pila.pop();
+							--i;
+						}
+						break;
+					case ')':
+						paso3();
+						break;
+				}
+			}
+			convertir(++i);
+		}
+	}
+	void paso3(){ // pasar contenido de pila hasta topar con (
+		if (pila.getCima()[0] == '('){
+			pila.pop();
+			return;
+		}else{
+			postfija.push(pila.getCima());
+			pila.pop();
+			paso3();
+		}
+	}
+	bool isNum(char c){
+		switch (c){
+			case '(':
+			case ')':
+			case '^':
+			case '/':
+			case '*':
+			case '+':
+			case '-':
 				return false;
-			}else if (i == str.size()-1){
-				cout<<"str: "<<str<<endl;
+			default:
 				return true;
-			}
-		}
-	}
-	
-	
-	/*
-	void paso4(){ // pasar contenidos de pila a posfija
-		if (pila.isEmpty()){
-			return;
-		}else{
-			if ( pila.getCima() == '(' ){
-				pila.pop();
-			}else{
-				posfija.push(pila.getCima());
-				pila.pop();	
-			}
-			paso4();
-		}
-	}
-	void evaluar(int i){
-		if (i == infijaSize){
-			paso4();
-			return;
-		}else{
-			if ( *(infija + i) > 64 && *(infija + i) < 91){	// PASO 1
-				posfija.push(*(infija + i));
-			}else if (pila.isEmpty()){	//PASO 2.a
-				pila.push(*(infija + i));
-			}else{  //PASO 2.b
-				switch ( *(infija + i) ){
-					case '(':
-					case '^':
-						pila.push(*(infija + i));
-						break;
-					case '*':
-					case '/':
-						if ( pila.getCima() != '^' && pila.getCima() != '*' && pila.getCima() != '/' ){
-							pila.push(*(infija + i));
-						}else{
-							posfija.push(pila.getCima());
-							pila.pop();
-							--i;
-						}
-						break;
-					case '+':
-					case '-':
-						if ( pila.getCima() == '('){
-							pila.push(*(infija + i));
-						}else{
-							posfija.push(pila.getCima());
-							pila.pop();
-							--i;
-						}
-						break;
-					case ')':
-						paso3();
-						break;
-				}
-			}
-			evaluar(++i);
-		}
-	}
-	void paso3(){ // pasar contenido de pila hasta topar con (
-		if (pila.getCima() == '('){
-			pila.pop();
-			return;
-		}else{
-			posfija.push(pila.getCima());
-			pila.pop();
-			paso3();
 		}
 	}
 
-	Stack getPostfija(){
-		return posfija;
-	}
-	*/
+
 };
 
-/*
-#include "Stack.h"
-class Evaluador{
-private:
-	char *infija; // apunta al arreglo char de la expresion
-	int infijaSize = 0; // tamaño de ese arreglo
-	Stack pila;	//pilas
-	Stack posfija;
-	
-public:
-	void inicializarEvaluador(char* expresion, int expresionSize){
-		infija = expresion;
-		infijaSize = expresionSize;
-		
-		evaluar(0);
-		
-		return;
-	}
-	void paso4(){ // pasar contenidos de pila a posfija
-		if (pila.isEmpty()){
-			return;
-		}else{
-			if ( pila.getCima() == '(' ){
-				pila.pop();
-			}else{
-				posfija.push(pila.getCima());
-				pila.pop();	
-			}
-			paso4();
-		}
-	}
-	void evaluar(int i){
-		if (i == infijaSize){
-			paso4();
-			return;
-		}else{
-			if ( *(infija + i) > 64 && *(infija + i) < 91){	// PASO 1
-				posfija.push(*(infija + i));
-			}else if (pila.isEmpty()){	//PASO 2.a
-				pila.push(*(infija + i));
-			}else{  //PASO 2.b
-				switch ( *(infija + i) ){
-					case '(':
-					case '^':
-						pila.push(*(infija + i));
-						break;
-					case '*':
-					case '/':
-						if ( pila.getCima() != '^' && pila.getCima() != '*' && pila.getCima() != '/' ){
-							pila.push(*(infija + i));
-						}else{
-							posfija.push(pila.getCima());
-							pila.pop();
-							--i;
-						}
-						break;
-					case '+':
-					case '-':
-						if ( pila.getCima() == '('){
-							pila.push(*(infija + i));
-						}else{
-							posfija.push(pila.getCima());
-							pila.pop();
-							--i;
-						}
-						break;
-					case ')':
-						paso3();
-						break;
-				}
-			}
-			evaluar(++i);
-		}
-	}
-	void paso3(){ // pasar contenido de pila hasta topar con (
-		if (pila.getCima() == '('){
-			pila.pop();
-			return;
-		}else{
-			posfija.push(pila.getCima());
-			pila.pop();
-			paso3();
-		}
-	}
-
-	Stack getPostfija(){
-		return posfija;
-	}
-	
-};
-*/
 
