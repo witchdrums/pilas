@@ -95,7 +95,8 @@ public:
 		}
 	}
 	void llenarInfija(int i, int j, int size ){
-		if (i == size){
+		cout<<"i: "<<i<<", j: "<<j<<", size: "<<size<<endl;
+		if (i > size){
 			expresionSize = j;
 			return;
 		}else{
@@ -108,17 +109,19 @@ public:
 				case '+':
 				case '-':
 					if (comodin != "") {
-						infija[j++] = comodin;
+						infija[j] = comodin;
+						j++;
 					}
+					cout<<infija[j-1]<<endl;
 					comodin = expresionOriginal[i];
-					infija[j++] = comodin;
+					infija[j] = comodin;
+					j++;
+					cout<<infija[j-1]<<endl;
 					comodin = "";
-					break;
 				default:
-					comodin += expresionOriginal[i];
-					break;
+					comodin += expresionOriginal[i++];
 			}
-			llenarInfija(++i, j, size);
+			llenarInfija(i, j, size);
 		}
 	}
 	void paso4(){ // pasar contenidos de pila a posfija

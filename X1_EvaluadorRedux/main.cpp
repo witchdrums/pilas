@@ -28,15 +28,19 @@ int main(){
 	//cin>>infija;
 	//infija = "1.432-(22^2*14)/(12+37/21^2)";
 	//llenarStack(infija, "", infija.size(), 0);
+	
+	
 	string infijas[5] = {
 		"1.432-(22^2*14)/(12+37/21^2)",
 		"(1/2)^3+4*(5-6)",
-		"3+2/(3-1)"
+		"1+3"
 	};
+
 	
-	evaluador.inicializar(infijas[0]);
-	evaluador.inicializar(infijas[1]);
+	
 	evaluador.inicializar(infijas[2]);
+	//evaluador.inicializar(infijas[1]);
+	//evaluador.inicializar(infijas[2]);
 }
 
 void llenarStack(string &infija, string str, int size, int i){
